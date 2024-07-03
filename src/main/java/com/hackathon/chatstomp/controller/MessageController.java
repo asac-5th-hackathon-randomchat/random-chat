@@ -18,7 +18,7 @@ public class MessageController {
     // 메시지 보내주는 거
     @MessageMapping("/message")
     public void sendMessage(Message message) {
-        simpMessageSendingOperations.convertAndSend("/sub/channel/" + message.getChatRoomId(), message.getData());
+        simpMessageSendingOperations.convertAndSend("/sub/channel/" + message.getChatRoomId(), message);
     }
 
 
