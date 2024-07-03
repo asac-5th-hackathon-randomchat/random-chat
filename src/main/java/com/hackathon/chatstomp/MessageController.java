@@ -10,13 +10,18 @@ import org.springframework.stereotype.Controller;
 public class MessageController {
     private final SimpMessageSendingOperations simpMessageSendingOperations;
     /*
-        /sub/channel/12345      - 구독(channelId:12345)
-        /pub/hello              - 메시지 발행
+        /sub/channel/{id}       - 구독(channelId:12345)
+        /pub/message            - 메시지 발행 경로
     */
-
+    // 메시지 보내주는 거
     @MessageMapping("/message")
-    public void message(Message message) {
-        simpMessageSendingOperations.convertAndSend("/sub/channel/" + message.getChannelId(), message);
+    public void sendMessage(Message message) {
+        simpMessageSendingOperations.convertAndSend("/sub/channel/" + message.getChannelId(), message.getData().toString());
     }
 
+    // TODO : 매칭 알고리즘
+
+    // TODO : api list
+
 }
+
