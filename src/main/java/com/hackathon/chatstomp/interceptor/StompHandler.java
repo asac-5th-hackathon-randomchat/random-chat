@@ -39,11 +39,6 @@ public class StompHandler implements ChannelInterceptor {
                 break;
             case SUBSCRIBE:
                 log.info("subscribed");
-                if (accessor.getDestination().startsWith("/waitqueue")) {
-                    redisChatMemberService.connectedWaitQueue(accessor.getSessionId(), sender);
-                } else {
-                    connectToChatRoom(accessor);
-                }
                 break;
             case DISCONNECT:
                 log.info("DISCONNECTED");
