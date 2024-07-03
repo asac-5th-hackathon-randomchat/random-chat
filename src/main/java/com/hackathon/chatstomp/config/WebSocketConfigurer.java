@@ -1,5 +1,6 @@
-package com.hackathon.chatstomp;
+package com.hackathon.chatstomp.config;
 
+import com.hackathon.chatstomp.interceptor.StompHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;

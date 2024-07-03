@@ -11,9 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Message {
     // 메시지 스펙 정의
-    // private String type;
     private String sender;
-    private String hannelId;
+    private String chatRoomId;
     private Object data;
 
     public void setSender(String sender) { this.sender = sender; }

@@ -1,5 +1,7 @@
-package com.hackathon.chatstomp;
+package com.hackathon.chatstomp.controller;
 
+import com.hackathon.chatstomp.Message;
+import com.hackathon.chatstomp.dto.ChatSendMessageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -16,8 +18,10 @@ public class MessageController {
     // 메시지 보내주는 거
     @MessageMapping("/message")
     public void sendMessage(Message message) {
-        simpMessageSendingOperations.convertAndSend("/sub/channel/" + message.getChannelId(), message.getData().toString());
+        simpMessageSendingOperations.convertAndSend("/sub/channel/" + message.getChatRoomId(), message.getData());
     }
+
+
 
     // TODO : 매칭 알고리즘
 
