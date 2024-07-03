@@ -22,9 +22,9 @@ public class StompHandler implements ChannelInterceptor {
         // 메시지의 헤더에 접근하기 위해 StompHeadAccessor 를 사용
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         StompCommand command = accessor.getCommand();
-
+        log.info(accessor.toString());
         // 명령 가져오기 => accessor.getCommand()
-        handleMessage(accessor.getCommand(), accessor);
+        handleMessage(command, accessor);
         return message;
     }
     private void handleMessage(StompCommand command, StompHeaderAccessor accessor) {
