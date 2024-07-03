@@ -14,9 +14,13 @@ public class RedisChatMemberService {
 
     public void connectedChatroom(Object chatRoomId, String sessionId, String sender) {
         String key = sessionId + ":" + sender;
-        log.info(key);
+        log.info("채팅 서버로 던져줌");
         String value = "chatRoom:" + chatRoomId;
         this.redisTemplate.opsForValue().set(key, value);
+    }
+
+    public void connectedWaitQueue(String sessionId, String sender) {
+        redisTemplate.opsForValue().set("wait:" + sender, sender);
     }
 
     public void deleteChatMember(String sessionId) {
