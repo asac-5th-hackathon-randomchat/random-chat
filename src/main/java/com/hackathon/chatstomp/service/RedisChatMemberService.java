@@ -1,10 +1,19 @@
 package com.hackathon.chatstomp.service;
 
+import com.hackathon.chatstomp.dto.ChatRandomResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.async.DeferredResult;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -14,28 +23,65 @@ public class RedisChatMemberService {
 
     public void connectedChatroom(Object chatRoomId, String sessionId, String sender) {
         String key = sessionId + ":" + sender;
-        log.info("채팅 서버로 던져줌");
         String value = "chatRoom:" + chatRoomId;
-        this.redisTemplate.opsForValue().set(key, value);
+        redisTemplate.opsForValue().set(key, value);
     }
 
-    public void connectedWaitQueue(String sessionId, String sender) {
+    public String connectedWaitQueue(String sessionId, String sender) {
         redisTemplate.opsForValue().set("wait:" + sender, sender);
+        return "wait:" + sender;
+    }
+
+    public List<String> getQueueList() {
+        Set<String> keys = redisTemplate.keys("wait:*");
+        if (keys == null) {
+            return List.of();
+        }
+        return keys.stream().map(key -> key.split(":")[1]).collect(Collectors.toList());
     }
 
     public void deleteChatMember(String sessionId) {
-        // 모든 키 검색
         Set<String> keys = redisTemplate.keys("*");
-
-            if (keys != null) {
-                for (String key : keys) {
-                    // 키에 sessionId가 포함되어 있는지 확인
-                    if (key.startsWith(sessionId  + ":")) {
-                        log.info("삭제 : " + key);
-                        redisTemplate.delete(key);
-                    }
+        if (keys != null) {
+            for (String key : keys) {
+                if (key.startsWith(sessionId + ":")) {
+                    redisTemplate.delete(key);
                 }
             }
         }
-
     }
+
+    public ChatRandomResult matching(String sender) {
+        List<String> redisChatQueues = getQueueList();
+
+        if (redisChatQueues.size() <= 1) {
+            return ChatRandomResult.of(0L, null);
+        }
+
+        Random random = new Random();
+        String partner;
+        do {
+            partner = redisChatQueues.get(random.nextInt(redisChatQueues.size()));
+        } while (partner.equals(sender));
+
+        removeQueue("wait:" + sender);
+        removeQueue("wait:" + partner);
+
+        Long chatRoomId = generateChatRoomId(); //
+
+        return ChatRandomResult.of(chatRoomId, partner);
+
+
+        // Implement this method to generate a unique chat room ID
+    }
+
+    public void removeQueue(String key) {
+        redisTemplate.delete(key);
+    }
+
+    private Long generateChatRoomId() {
+        // Implement your logic to generate a unique chat room ID
+        return new Random().nextLong();
+    }
+
+}
