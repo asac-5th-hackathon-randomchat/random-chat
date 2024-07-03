@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+## Dokcer Config ##
+
+docker-compose.yml
+Dockerfile
