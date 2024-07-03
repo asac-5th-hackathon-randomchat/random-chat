@@ -41,8 +41,8 @@ public class StompHandler implements ChannelInterceptor {
             case DISCONNECT:
                 log.info("DISCONNECTED");
                 String sessionId = accessor.getSessionId();
-                log.info("sender" + sender);
-                redisChatMemberService.deleteChatMember(sessionId, sender);
+                //log.info("sender" + sender);
+                redisChatMemberService.deleteChatMember(sessionId);
                 break;
             // SUBSCRIBE일 때 구현할 로직?
         }
