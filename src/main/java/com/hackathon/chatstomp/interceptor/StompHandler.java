@@ -39,6 +39,7 @@ public class StompHandler implements ChannelInterceptor {
                 break;
             case SUBSCRIBE:
                 log.info("subscribed");
+                connectToChatRoom(accessor);
                 break;
             case DISCONNECT:
                 log.info("DISCONNECTED");
